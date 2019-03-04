@@ -1,4 +1,4 @@
-package com.jkbanlv.library;
+package com.permission;
 
 import android.app.Activity;
 import android.app.AlertDialog;

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--白色-->
+    <color name="white">#FFFFFF</color>
+    <!--黑色-->
+    <color name="black">#000000</color>
+    <!--透明色-->
+    <color name="transparent">#00000000</color>
+
+    <!--执法通app自定义颜色-->
+    <color name="app_background">#fbfafa</color>
+    <color name="app_blue">#268EE5</color>
+    <color name="tab_indicator">#0dace6</color>
+    <color name="app_orange">#f18f45</color>
+    <color name="app_red">#f77453</color>
+    <!--文字颜色-->
+    <color name="title_text_color_dark">#222222</color>
+    <color name="title_text_color">#333333</color>
+    <color name="content_text_color">#666666</color>
+    <color name="hint_text_color">#999999</color>
+    <color name="hint_text_color_light">#aaaaaa</color>
+    <!--分割线颜色-->
+    <color name="divider_dark">#e2e2e2</color>
+    <color name="divider">#e6e6e6</color>
+    <color name="divider_light">#eeeeee</color>
+    <!--背景颜色-->
+    <color name="background_F7F7F7">#F7F7F7</color>
+    <color name="background_F0F0F0">#F0F0F0</color>
+    <color name="background_blue">#36a0f1</color>
+
+
+    <color name="shadow">#cc222222</color>
+</resources>

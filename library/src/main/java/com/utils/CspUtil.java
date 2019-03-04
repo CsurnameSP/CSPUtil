@@ -1,57 +1,55 @@
-package com.jkbanlv.library;
+package com.utils;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.ActivityManager;
+import android.app.Dialog;
 import android.content.ContentUris;
 import android.content.Context;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.Matrix;
 import android.graphics.Point;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
-import android.os.Environment;
-import android.os.StatFs;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
-import android.renderscript.Allocation;
-import android.renderscript.Element;
-import android.renderscript.RenderScript;
-import android.renderscript.ScriptIntrinsicBlur;
 
-import android.util.Log;
+import android.support.design.widget.TabLayout;
+import android.support.v7.app.AlertDialog;
+import android.text.TextUtils;
+import android.util.TypedValue;
 import android.view.Display;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
-import java.io.BufferedOutputStream;
+
+import com.jkbanlv.library.R;
+
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.math.BigDecimal;
+import java.lang.reflect.Field;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.DecimalFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 import java.util.Locale;
-import java.util.logging.Logger;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
  * Created by csp on 2017/9/22.
  */
+
 public class CspUtil {
 
     /**
@@ -104,22 +102,7 @@ public class CspUtil {
         Toast.makeText(context, "屏幕分辨率为:" + x + "X" + y + "\n屏幕像素密度为:" + densityDpi +
                 "\n相对密度为:" + density, Toast.LENGTH_LONG).show();
     }
-    /**
-     * 修改电池栏颜色
-     */
-//    public static void setHintColor(Activity context, int color) {
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-//            //   setTranslucentStatus(true);
-//            Window win = context.getWindow();
-//            WindowManager.LayoutParams winParams = win.getAttributes();
-//            final int bits = WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS;
-//            winParams.flags |= bits;
-//            win.setAttributes(winParams);
-//            SystemBarTintManager tintManager = new SystemBarTintManager(context);
-//            tintManager.setStatusBarTintEnabled(true);
-//            tintManager.setStatusBarTintResource(color);
-//        }
-//    }
+
     /**************************************************时间格式化工具*******************************************************/
     /**
      * 时间格式化工具
@@ -130,7 +113,7 @@ public class CspUtil {
     public static String getDateTimeFromMillisecond(Long millisecond) {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yy-MM-dd HH:mm:ss");
         Date date = new Date(millisecond);
-        return  simpleDateFormat.format(date);
+        return simpleDateFormat.format(date);
     }
 
     /**
@@ -235,10 +218,27 @@ public class CspUtil {
     }
 
     /**************************************************手机号密码***********************************************************/
-    private static Pattern NUMBER_PATTERN = Pattern.compile("^((13[0-9])|(15[^4,\\D])|(18[0-9]))\\d{8}$");
+    private static Pattern NUMBER_PATTERN = Pattern.compile("^((13[0-9])|(15[^4,\\D])|(18[0-9])|(17[0-9])|(19[0-9])|(16[0-9])|(14[5,7]))\\d{8}$");
     private static Pattern QQ_PATTERN = Pattern.compile("[1-9][0-9]{4,14}");
     private static Pattern EMAIL_PATTERN = Pattern.compile("^([a-zA-Z0-9_\\-\\.]+)@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.)|(([a-zA-Z0-9\\-]+\\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\\]?)$");
     private static Pattern PASSWORD_PATTERN = Pattern.compile("^([a-z]|[0-9]|[A-Z]){6,16}$");
+
+    /**
+     * 将字符串中的连续的多个换行缩减成一个换行
+     *
+     * @param str 要处理的内容
+     * @return 返回的结果
+     */
+    public static String replaceLineBlanks(String str) {
+        String result = "";
+        if (str != null) {
+            Pattern p = Pattern.compile("(\r?\n(\\s*\r?\n)+)");
+            Matcher m = p.matcher(str);
+            result = m.replaceAll("\r\n");
+        }
+        return result;
+    }
+
 
     /**
      * 正则表达式检测是否是手机号码
@@ -246,7 +246,7 @@ public class CspUtil {
      * @param mobile
      * @return
      */
-    public static boolean isPhoneNumber(String mobile) {
+    public static boolean isMobileNumber(String mobile) {
         return NUMBER_PATTERN.matcher(mobile).matches();
     }
 
@@ -276,7 +276,7 @@ public class CspUtil {
      * @param password
      * @return
      */
-    public static boolean isPassword(String password) {
+    public static boolean passwordRule(String password) {
         return PASSWORD_PATTERN.matcher(password).matches();
     }
     /****************************************************MD5加密**********************************************************/
@@ -466,7 +466,7 @@ public class CspUtil {
      * 获取手机屏幕宽度
      *
      * @param context
-     * @return px
+     * @return
      */
     public static int getPhoneWidth(Context context) {
         int widthPixels = context.getResources().getDisplayMetrics().widthPixels;
@@ -484,12 +484,12 @@ public class CspUtil {
      * 获取手机高度
      *
      * @param context
-     * @return px
+     * @return
      */
     public static int getPhoneHeight(Context context) {
-        int heightPixels = context.getResources().getDisplayMetrics().heightPixels;
+        int widthPixels = context.getResources().getDisplayMetrics().heightPixels;
 
-        return heightPixels;
+        return widthPixels;
     }
 
     public static int getPhoneDpHeight(Context context) {
@@ -505,12 +505,12 @@ public class CspUtil {
     public static final long TB = 1024 * 1024 * 1024 * 1024;
 
     /**
-     *格式化文件大小
+     * 传入一个byte的总数，返回1.23Mb或者12.45Kb的字符串形式
      *
-     * @param num 文件大小 单位字节Byte
+     * @param num
      * @return
      */
-    public static String transFromFileSize(long num) {
+    public static String byteToString(long num) {
         if (num < KB) {
             //return new DecimalFormat("#.00").format(num)+"B";
             return num + "B";
@@ -676,6 +676,44 @@ public class CspUtil {
     }
 
     /**
+     * 获取网络状态
+     *
+     * @param context
+     * @return
+     */
+    public static int getNetWorkState(Context context) {
+        /**
+         * 没有连接网络
+         */
+        final int NETWORK_NONE = -1;
+        /**
+         * 移动网络
+         */
+        final int NETWORK_MOBILE = 0;
+        /**
+         * 无线网络
+         */
+        final int NETWORK_WIFI = 1;
+        // 得到连接管理器对象
+        ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        Object systemService = context.getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        if (activeNetworkInfo != null && activeNetworkInfo.isConnected()) {
+
+            if (activeNetworkInfo.getType() == (ConnectivityManager.TYPE_WIFI)) {
+                return NETWORK_WIFI;
+            } else if (activeNetworkInfo.getType() == (ConnectivityManager.TYPE_MOBILE)) {
+                return NETWORK_MOBILE;
+            }
+        } else {
+            return NETWORK_NONE;
+        }
+        return NETWORK_NONE;
+    }
+
+    /**
      * 判断一个单字符string是否为字母
      *
      * @param msg
@@ -690,404 +728,75 @@ public class CspUtil {
         }
     }
 
-    public static final long ONE_MINUTE = 60 * 1000;
-    public static final long ONE_HOUR = 60 * 60 * 1000;
     /**
-     * 封装一个时间显示的方法(用于一般的发帖，评论功能时间显示)
-     * @param time
-     * @return
-     */
-    public static String CSPFormatTime(String time) {
-        boolean isToday = false, isYesterday = false, isThisYear = false;
-        //拿到时间的毫秒值
-        long millions = transformStringToLong(time);
-        String msg = "";
-        //拿到当前时间的毫秒值
-        long currentTime = System.currentTimeMillis();
-
-        isToday = isToday(millions);
-        isYesterday = isYesterday(millions);
-        isThisYear = isThisYear(millions);
-
-        Calendar calendar = Calendar.getInstance();
-        Date date = new Date(millions);
-        calendar.setTime(date);
-        int year = calendar.get(Calendar.YEAR);
-        int month = calendar.get(Calendar.MONTH);
-        int day = calendar.get(Calendar.DAY_OF_MONTH);
-        int hour = calendar.get(Calendar.HOUR_OF_DAY);
-        int minute = calendar.get(Calendar.MINUTE);
-        int seconds = calendar.get(Calendar.SECOND);
-
-        //求时间差
-        long diffTime = currentTime - millions;
-        if (diffTime < ONE_MINUTE) {
-            msg = "刚刚";
-        } else if (diffTime < ONE_HOUR) {
-            int minu = (int) (diffTime / 60000);
-            msg = minu + "分钟前";
-        } else if (isToday) {
-            String str_hour = "";
-            if (hour <= 9) {
-                str_hour = "0" + hour;
-            } else {
-                str_hour = hour + "";
-            }
-
-            String str_minute = "";
-            if (minute <= 9) {
-                str_minute = "0" + minute;
-            } else {
-                str_minute = minute + "";
-            }
-            msg = "今天 " + str_hour + ":" + str_minute;
-        } else if (isYesterday) {
-            String str_hour = "";
-            if (hour <= 9) {
-                str_hour = "0" + hour;
-            } else {
-                str_hour = hour + "";
-            }
-
-            String str_minute = "";
-            if (minute <= 9) {
-                str_minute = "0" + minute;
-            } else {
-                str_minute = minute + "";
-            }
-            msg = "昨天 " + str_hour + ":" + str_minute;
-        } else if (isThisYear) {
-            msg = (month + 1) + "月" + day + "日";
-        } else {
-
-            String str_day = "";
-            if (day <= 9) {
-                str_day = "0" + day;
-            } else {
-                str_day = day + "";
-            }
-            msg = year + "/" + (month + 1) + "/" + str_day;
-        }
-        return msg;
-    }
-
-    /**
-     * 将字符串"yyyy-MM-dd HH:mm:ss"解析成毫秒值
+     * 设置TabLayout indicator的长度
      *
-     * @param time 符合格式的时间字符串
-     * @return
+     * @param tabs
+     * @param leftDip
+     * @param rightDip
      */
-    private static long transformStringToLong(String time) {
-        long millions = 0;
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        Date date = null;
+    public static void setIndicator(TabLayout tabs, int leftDip, int rightDip) {
+        Class<?> tabLayout = tabs.getClass();
+        Field tabStrip = null;
         try {
-            date = formatter.parse(time);
-            millions = date.getTime();
-
-        } catch (ParseException e) {
+            tabStrip = tabLayout.getDeclaredField("mTabStrip");
+        } catch (NoSuchFieldException e) {
             e.printStackTrace();
         }
-        return millions;
-    }
 
-    /**
-     * 判断当前时间是否是在今天
-     * @param time 毫秒值
-     * @return
-     */
-    public static boolean isToday(long time) {
-        Calendar pre = Calendar.getInstance();
-        Date predate = new Date(System.currentTimeMillis());
-        pre.setTime(predate);
-
-        Calendar cal = Calendar.getInstance();
-        Date date = new Date(time);
-        cal.setTime(date);
-
-        if (cal.get(Calendar.YEAR) == (pre.get(Calendar.YEAR))) {
-            int diffDay = cal.get(Calendar.DAY_OF_YEAR)
-                    - pre.get(Calendar.DAY_OF_YEAR);
-
-            return diffDay == 0;
-        }
-        return false;
-    }
-
-    /**
-     * 判断当前时间是否是昨天
-     * @param time  毫秒值
-     * @return
-     */
-    public static boolean isYesterday(long time) {
-
-        Calendar pre = Calendar.getInstance();
-        Date predate = new Date(System.currentTimeMillis());
-        pre.setTime(predate);
-
-        Calendar cal = Calendar.getInstance();
-        Date date = new Date(time);
-        cal.setTime(date);
-        if (cal.get(Calendar.YEAR) == (pre.get(Calendar.YEAR))) {
-            int diffDay = cal.get(Calendar.DAY_OF_YEAR)
-                    - pre.get(Calendar.DAY_OF_YEAR);
-            return diffDay == -1;
-        }
-        return false;
-    }
-
-    /**
-     * 判断当前时间是否是今年
-     * @param time 毫秒值
-     * @return
-     */
-    public static boolean isThisYear(long time) {
-
-        Calendar pre = Calendar.getInstance();
-        Date predate = new Date(System.currentTimeMillis());
-        pre.setTime(predate);
-
-        Calendar cal = Calendar.getInstance();
-        Date date = new Date(time);
-        cal.setTime(date);
-        int year = cal.get(Calendar.YEAR) - (pre.get(Calendar.YEAR));
-
-        return year == 0;
-    }
-    /**
-     * 2 * 获取版本号 1.0.1 * @return 当前应用的版本号 1.0.1
-     */
-    public static String getAppVersionName(Context context) {
+        tabStrip.setAccessible(true);
+        LinearLayout llTab = null;
         try {
-            PackageManager manager = context.getPackageManager();
-            PackageInfo info = manager.getPackageInfo(context.getPackageName(),
-                    0);
-            String version = info.versionName;
-            int versioncode = info.versionCode;
-            return version;
-        } catch (Exception e) {
+            llTab = (LinearLayout) tabStrip.get(tabs);
+        } catch (IllegalAccessException e) {
             e.printStackTrace();
         }
-        return "";
+
+        int left = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, leftDip, Resources.getSystem().getDisplayMetrics());
+        int right = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, rightDip, Resources.getSystem().getDisplayMetrics());
+
+        for (int i = 0; i < llTab.getChildCount(); i++) {
+            View child = llTab.getChildAt(i);
+            child.setPadding(0, 0, 0, 0);
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, 1);
+            params.leftMargin = left;
+            params.rightMargin = right;
+            child.setLayoutParams(params);
+            child.invalidate();
+        }
     }
 
+
+
+
+
+
     /**
-     *比较两个string类型的versionName
-     * @param version  1.0.0
-     * @param newVersion 1.0.1
-     * @return
+     * 获取进程号对应的进程名
+     *
+     * @param pid 进程号
+     * @return 进程名
      */
-    public static boolean versionNeedUpdate(String version, String newVersion) {
-        Log.i("tag", "version: " + version + "\tnewVersion:" + newVersion);
-        String[] versions = version.split("\\.");
-        String[] newVersions = newVersion.split("\\.");
-        Log.i("tag", "versions: " + versions.length + "\tnewVersions:" + newVersions.length);
-        int v1 = Integer.parseInt(versions[0]);
-        int v2 = Integer.parseInt(versions[1]);
-        int v3 = Integer.parseInt(versions[2]);
-        int n1 = Integer.parseInt(newVersions[0]);
-        int n2 = Integer.parseInt(newVersions[1]);
-        int n3 = Integer.parseInt(newVersions[2]);
-        if (n1 > v1) {
-            return true;
-        } else if (n1 == v1) {
-            if (n2 > v2) {
-                return true;
-            } else if (n2 == v2) {
-                return n3 > v3;
+    public static String getProcessName(int pid) {
+        BufferedReader reader = null;
+        try {
+            reader = new BufferedReader(new FileReader("/proc/" + pid + "/cmdline"));
+            String processName = reader.readLine();
+            if (!TextUtils.isEmpty(processName)) {
+                processName = processName.trim();
             }
-        }
-        return false;
-    }
-    /**
-     * 判断一个应用是否是启动状态
-     *
-     * @param context
-     * @return
-     */
-    public static boolean getCurrentTask(Context context) {
-        ActivityManager activityManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
-        //获取当前所有存活task的信息
-        List<ActivityManager.RunningTaskInfo> appProcessInfos = activityManager.getRunningTasks(Integer.MAX_VALUE);
-        //遍历，若task的name与当前task的name相同，则返回true，否则，返回false
-        for (ActivityManager.RunningTaskInfo process : appProcessInfos) {
-            if (process.baseActivity.getPackageName().equals(context.getPackageName())
-                    || process.topActivity.getPackageName().equals(context.getPackageName())) {
-                return true;
-            }
-        }
-        return false;
-    }
-    /**
-     * 高斯模糊图片处理
-     *
-     * @param context 上下文对象
-     * @param source  bitmap源文件
-     * @param radius  半径
-     * @param scale   压缩的比例>1
-     * @return
-     */
-    public static Bitmap toGaussianBlur(Context context, Bitmap source, int radius, float scale) {
-        int width = Math.round(source.getWidth() / scale);
-        int height = Math.round(source.getHeight() / scale);
-        Bitmap inputBmp = Bitmap.createScaledBitmap(source, width, height, false);
-        RenderScript renderScript = RenderScript.create(context);
-        final Allocation input = Allocation.createFromBitmap(renderScript, inputBmp);
-        final Allocation output = Allocation.createTyped(renderScript, input.getType());
-        ScriptIntrinsicBlur scriptIntrinsicBlur = ScriptIntrinsicBlur.create(renderScript, Element.U8_4(renderScript));
-        scriptIntrinsicBlur.setInput(input);
-        scriptIntrinsicBlur.setRadius(radius);
-        scriptIntrinsicBlur.forEach(output);
-        output.copyTo(inputBmp);
-        renderScript.destroy();
-        return inputBmp;
-    }
-
-
-    /**
-     * 转换bitmap位图资源
-     * @param source  bitmap资源
-     * @param width   要转换的宽度px
-     * @param height  要转换的高度px
-     * @return
-     */
-    public static Bitmap transformBitmap(Bitmap source, int width, int height){
-        int srcWidth=source.getWidth();
-        int srcHeight=source.getHeight();
-
-        float scaleWidth = (float) new BigDecimal((float)width/srcWidth).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
-        float scaleHeight = (float) new BigDecimal((float)height/srcHeight).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
-        //缩放比例，千万不要用int接收
-        float scale=scaleWidth>scaleHeight?scaleWidth:scaleHeight;
-        // 取得想要缩放的matrix參數
-        Matrix matrix = new Matrix();
-        matrix.postScale(scale, scale);
-        Bitmap newBitmap = Bitmap.createBitmap(source, 0, 0, srcWidth, srcHeight, matrix, true);
-        return newBitmap;
-    }
-    /**
-     * 判断一个string字符串是否全部由汉字组成
-     * @param msg
-     * @return
-     */
-    public static boolean isAllChineseCharacters(String msg){
-        String reg = "[\\u4e00-\\u9fa5]+";
-        return msg.matches(reg);
-    }
-    /********************************************SDCardHelper***********************************************/
-    /**
-     * sd卡挂载
-     *
-     * @return
-     */
-    public static boolean isSDCardMounted() {
-        return Environment.getExternalStorageState().equals(
-                Environment.MEDIA_MOUNTED);
-    }
-    /**
-     * 获取sd卡常用目录
-     *
-     * @return
-     */
-    public static String getSDCardBaseDir() {
-        if (isSDCardMounted()) {
-            return Environment.getExternalStorageDirectory().getAbsolutePath();
-        }
-        return null;
-    }
-    /**
-     * 获取SD卡九大公有目录的路径
-     *
-     * @param type
-     * @return
-     */
-    public static String getSDCardPublicDir(String type) {
-        if (isSDCardMounted()) {
-            return Environment.getExternalStoragePublicDirectory(type).toString();
-        }
-        return null;
-    }
-    /**
-     * 获取SD卡私有Cache目录的路径
-     *
-     * @param context
-     * @return
-     */
-    public static String getSDCardPrivateCacheDir(Context context) {
-        if (isSDCardMounted()) {
-            return context.getExternalCacheDir().getAbsolutePath();
-        }
-        return null;
-    }
-
-    /**
-     * 获取SD卡私有Files目录的路径
-     *
-     * @param context
-     * @param type
-     * @return
-     */
-    public static String getSDCardPrivateFilesDir(Context context, String type) {
-        if (isSDCardMounted()) {
-            return context.getExternalFilesDir(type).getAbsolutePath();
-        }
-        return null;
-    }
-    /**
-     * 获取SD卡的完整空间大小，返回MB
-     *
-     * @return
-     */
-    public static long getSDCardSize() {
-        if (isSDCardMounted()) {
-            StatFs fs = new StatFs(getSDCardBaseDir());
-            long count = 0;
-            long size = 0;
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
-                count = fs.getBlockCountLong();
-                size = fs.getBlockSizeLong();
-            }
-            return count * size / 1024 / 1024;
-        }
-        return 0;
-    }
-    /**
-     * 往SD卡的自定义目录下保存文件
-     *
-     * @param data
-     * @param dir
-     * @param fileName
-     * @return
-     */
-    public static boolean saveFileToSDCardCustomDir(byte[] data, String dir, String fileName) {
-        BufferedOutputStream bos = null;
-        if (isSDCardMounted()) {
-            File file = new File(getSDCardBaseDir() + File.separator + dir);
-            if (!file.exists()) {
-                file.mkdirs();// 递归创建自定义目录
-            }
-            Log.i("tag", "saveFileToSDCardCustomDir: " + file.getAbsolutePath() + "\t文件是否存在：" + file.exists());
+            return processName;
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
+        } finally {
             try {
-                bos = new BufferedOutputStream(new FileOutputStream(new File(
-                        file, fileName)));
-                bos.write(data);
-                bos.flush();
-                Log.i("tag", "saveFileToSDCardCustomDir: 保存成功");
-                return true;
-            } catch (Exception e) {
-                Log.i("tag", "saveFileToSDCardCustomDir: 捕获异常：" + e.toString());
-                e.printStackTrace();
-            } finally {
-                try {
-                    if (bos != null) {
-                        bos.close();
-                    }
-                } catch (IOException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
+                if (reader != null) {
+                    reader.close();
                 }
+            } catch (IOException exception) {
+                exception.printStackTrace();
             }
         }
-        return false;
+        return null;
     }
 }

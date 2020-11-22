@@ -15,6 +15,19 @@
         android:textColor="@color/title_text_color"
         android:textSize="18sp"
         android:textStyle="bold" />
+    <LinearLayout
+        android:id="@+id/dialog_custom_view_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="gone"
+        android:paddingTop="5dp"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
+        android:paddingBottom="5dp"
+        >
+
+    </LinearLayout>
 
     <TextView
         android:id="@+id/dialog_msg"
@@ -24,6 +37,7 @@
         android:paddingRight="15dp"
         android:paddingTop="10dp"
         android:text="提示信息"
+        android:lineSpacingMultiplier="1.2"
         android:minHeight="65dp"
         android:textColor="@color/content_text_color"
         android:textSize="14sp"
@@ -51,6 +65,7 @@
             android:textSize="14sp" />
 
         <View
+            android:id="@+id/click_line"
             android:layout_width="1dp"
             android:layout_height="match_parent"
             android:background="@color/divider" />

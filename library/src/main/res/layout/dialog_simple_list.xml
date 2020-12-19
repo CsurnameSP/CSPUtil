@@ -1,31 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/white"
-    >
+    android:orientation="vertical">
+
     <TextView
         android:id="@+id/dialog_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="法律"
         android:padding="15dp"
-        android:textSize="18sp"
-        android:textStyle="bold"
+        android:text="法律"
         android:textColor="@color/title_text_color"
-        />
-    <com.environment.protection.view.CustomRecyclerView
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
+    <com.personal.csp.view.CustomRecyclerView
         android:id="@+id/dialog_recycler"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingLeft="15dp"
-        android:paddingRight="15dp"
         android:minHeight="200dp"
-        >
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp">
 
-    </com.environment.protection.view.CustomRecyclerView>
+    </com.personal.csp.view.CustomRecyclerView>
+
     <View
         android:layout_width="match_parent"
-        android:layout_height="30dp"/>
+        android:layout_height="30dp" />
 </LinearLayout>

@@ -15,5 +15,5 @@ Add it in your root build.gradle at the end of repositories:
 Step 2. Add the dependency
 
 	dependencies {
-	        implementation 'com.github.CsurnameSP:CSPUtil:Tag'
+	        implementation 'com.github.CsurnameSP:CSPUtil:1.2.0'
 	}

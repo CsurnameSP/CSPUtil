@@ -56,6 +56,16 @@ public class CustomDialog {
             mDialog.cancel();
         }
     }
+    /***
+     * add notes by CSP on 2020/12/21
+     * description:添加获取window的方法
+     */
+    public Window getWindow(){
+        if (mDialog!=null) {
+            return mDialog.getWindow();
+        }
+        return null;
+    }
 
     public static class Builder {
         private Context mContext;

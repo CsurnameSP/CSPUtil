@@ -77,7 +77,7 @@
             android:layout_weight="1"
             android:gravity="center"
             android:text="确认"
-            android:textColor="@color/white"
+            android:textColor="@color/title_text_color"
             android:textSize="14sp" />
     </LinearLayout>
 </LinearLayout>

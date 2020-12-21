@@ -4,9 +4,11 @@ import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
 
+import androidx.annotation.ColorInt;
 import androidx.annotation.ColorRes;
 import androidx.appcompat.app.AlertDialog;
 
+import android.content.res.ColorStateList;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -38,9 +40,10 @@ public class CustomDialog {
     /***描述： 添加自定义View @author csp 创建日期 ：2019/11/14 17:41***/
     private View mCustomView;
 
-    /**description:  支持对文字颜色的改动  ——add notes by CSP on 18:23**/
-    private @ColorRes
-    int mTitleTextColor, mContentTextColor, mPositiveTextColor, mNegativeTextColor;
+    /**
+     * description:  支持对文字颜色的改动  ——add notes by CSP on 18:23
+     **/
+    private ColorStateList mTitleTextColor, mContentTextColor, mPositiveTextColor, mNegativeTextColor;
 
     private CustomDialog(Context context) {
         mContext = context;
@@ -56,12 +59,13 @@ public class CustomDialog {
             mDialog.cancel();
         }
     }
+
     /***
      * add notes by CSP on 2020/12/21
      * description:添加获取window的方法
      */
-    public Window getWindow(){
-        if (mDialog!=null) {
+    public Window getWindow() {
+        if (mDialog != null) {
             return mDialog.getWindow();
         }
         return null;
@@ -77,7 +81,7 @@ public class CustomDialog {
         private OnNegativeButtonClickListener mNegativeListener;
         private boolean mCancelable = true;
         private boolean mShowOneBtn = false;//只显示一个按钮
-        private int mTitleTextColor, mContentTextColor, mPositiveTextColor, mNegativeTextColor;
+        private ColorStateList mTitleTextColor, mContentTextColor, mPositiveTextColor, mNegativeTextColor;
         private View mCustomView;
 
         public Builder setCustomView(View view) {
@@ -129,23 +133,45 @@ public class CustomDialog {
             return this;
         }
 
-        public Builder setTitleTextColor(@ColorRes int color) {
-            this.mTitleTextColor = color;
+        public Builder setTitleTextColor(@ColorInt int color) {
+            this.mTitleTextColor = ColorStateList.valueOf(color);
             return this;
         }
 
-        public Builder setContentTextColor(@ColorRes int color) {
-            this.mContentTextColor = color;
+        public Builder setTitleTextColor(ColorStateList colors) {
+            this.mTitleTextColor = colors;
             return this;
         }
 
-        public Builder setPositiveTextColor(@ColorRes int color) {
-            this.mPositiveTextColor = color;
+        public Builder setContentTextColor(@ColorInt int color) {
+            this.mContentTextColor = ColorStateList.valueOf(color);
             return this;
         }
 
-        public Builder setNegativeTextColor(@ColorRes int color) {
-            this.mNegativeTextColor = color;
+        public Builder setContentTextColor(ColorStateList colors) {
+            this.mContentTextColor = colors;
+            return this;
+        }
+
+
+        public Builder setPositiveTextColor(ColorStateList colors) {
+            this.mPositiveTextColor = colors;
+            return this;
+        }
+
+        public Builder setPositiveTextColor(@ColorInt int color) {
+            this.mPositiveTextColor = ColorStateList.valueOf(color);
+            return this;
+        }
+
+
+        public Builder setNegativeTextColor(ColorStateList colors) {
+            this.mNegativeTextColor = colors;
+            return this;
+        }
+
+        public Builder setNegativeTextColor(@ColorInt int color) {
+            this.mNegativeTextColor = ColorStateList.valueOf(color);
             return this;
         }
 
@@ -226,7 +252,7 @@ public class CustomDialog {
         if (!TextUtils.isEmpty(mTitle)) {
             dialogTitle.setText(mTitle);
         }
-        if (mTitleTextColor!=0){
+        if (mTitleTextColor != null) {
             dialogTitle.setTextColor(mTitleTextColor);
         }
 
@@ -234,7 +260,7 @@ public class CustomDialog {
         if (!TextUtils.isEmpty(mMessage)) {
             dialogMsg.setText(mMessage);
         }
-        if (mContentTextColor!=0){
+        if (mContentTextColor != null) {
             dialogMsg.setTextColor(mContentTextColor);
         }
         if (mShowOneBtn) {
@@ -248,14 +274,14 @@ public class CustomDialog {
         if (!TextUtils.isEmpty(mPositiveText)) {
             clickPositive.setText(mPositiveText);
         }
-        if (mPositiveTextColor!=0){
+        if (mPositiveTextColor != null) {
             clickPositive.setTextColor(mPositiveTextColor);
         }
         //取消按钮自定义
         if (!TextUtils.isEmpty(mNegativeText)) {
             clickNegative.setText(mNegativeText);
         }
-        if (mNegativeTextColor!=0){
+        if (mNegativeTextColor != null) {
             clickNegative.setTextColor(mNegativeTextColor);
         }
         //取消
